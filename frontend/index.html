@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <title>Teste Piper TTS</title>
+</head>
+<body>
+  <h2>Teste de voz com Piper TTS (Docker Compose)</h2>
+  <textarea id="texto" rows="4" cols="50" placeholder="Digite algo..."></textarea><br><br>
+  <button onclick="falar()">Falar</button><br><br>
+  <audio id="audio" controls></audio>
+
+  <script>
+    async function falar() {
+      const texto = document.getElementById("texto").value;
+      const res = await fetch("http://localhost:3000/tts", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ text: texto }),
+      });
+
+      if (!res.ok) {
+        alert("Erro ao gerar áudio.");
+        return;
+      }
+
+      const blob = await res.blob();
+      const url = URL.createObjectURL(blob);
+      const audio = document.getElementById("audio");
+      audio.src = url;
+      audio.play();
+    }
+  </script>
+</body>
+</html>
